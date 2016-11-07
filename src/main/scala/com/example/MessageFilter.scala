@@ -45,3 +45,14 @@ class InventorySystemX extends Actor {
       MessageFilterDriver.completedStep()
   }
 }
+
+class InventorySystemXMessageFilter(actualInventorySystemX: ActorRef) extends Actor {
+  def receive = {
+    case orderPlaced: OrderPlaced if (orderPlaced.order.isType("TypeXYZ")) =>
+      actualInventorySystemX forward orderPlaced
+      MessageFilterDriver.completedStep()
+    case incompatibleOrder =>
+      println(s"InventorySystemXMessageFilter: filtering out: $incompatibleOrder")
+      MessageFilterDriver.completedStep()
+  }
+}
