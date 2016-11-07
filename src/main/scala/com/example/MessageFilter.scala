@@ -34,3 +34,14 @@ class InventorySystemA extends Actor {
       MessageFilterDriver.completedStep()
   }
 }
+
+class InventorySystemX extends Actor {
+  def receive = {
+    case OrderPlaced(order) =>
+      println(s"InventorySystemX: handling $order")
+      MessageFilterDriver.completedStep()
+    case _ =>
+      println(s"InventorySystemX: received unexpected message")
+      MessageFilterDriver.completedStep()
+  }
+}
