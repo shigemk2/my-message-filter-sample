@@ -23,3 +23,14 @@ case class OrderPlaced(order: Order)
 
 object MessageFilterDriver extends CompletableApp(4) {
 }
+
+class InventorySystemA extends Actor {
+  def receive = {
+    case OrderPlaced(order) if (order.isType("TypeABC")) =>
+      println(s"InventorySystemA: handling $order")
+      MessageFilterDriver.completedStep()
+    case incompatibleOrder =>
+      println(s"InventorySystemA: filtering out: $incompatibleOrder")
+      MessageFilterDriver.completedStep()
+  }
+}
