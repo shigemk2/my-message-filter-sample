@@ -19,5 +19,7 @@ case class OrderItem(id: String, itemType: String, description: String, price: D
   }
 }
 
+case class OrderPlaced(order: Order)
+
 object MessageFilterDriver extends CompletableApp(4) {
 }
