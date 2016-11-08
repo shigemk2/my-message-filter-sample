@@ -22,6 +22,24 @@ case class OrderItem(id: String, itemType: String, description: String, price: D
 case class OrderPlaced(order: Order)
 
 object MessageFilterDriver extends CompletableApp(4) {
+  val inventorySystemA = system.actorOf(Props[InventorySystemA], "inventorySystemA")
+  val actualInventorySystemX = system.actorOf(Props[InventorySystemX], "inventorySystemX")
+  val inventorySystemX = system.actorOf(Props(classOf[InventorySystemXMessageFilter], actualInventorySystemX), "inventorySystemXMessageFilter")
+
+  val orderItem1 = OrderItem("1", "TypeABC.4", "An item of type ABC.4.", 29.95)
+  val orderItem2 = OrderItem("2", "TypeABC.1", "An item of type ABC.1.", 99.95)
+  val orderItem3 = OrderItem("3", "TypeABC.9", "An item of type ABC.9.", 14.95)
+  val orderItemsOfTypeA = Map(orderItem1.itemType -> orderItem1, orderItem2.itemType -> orderItem2, orderItem3.itemType -> orderItem3)
+  inventorySystemA ! OrderPlaced(Order("123", "TypeABC", orderItemsOfTypeA))
+  inventorySystemX ! OrderPlaced(Order("123", "TypeABC", orderItemsOfTypeA))
+
+  val orderItem4 = OrderItem("4", "TypeXYZ.2", "An item of type XYZ.2.", 74.95)
+  val orderItem5 = OrderItem("5", "TypeXYZ.1", "An item of type XYZ.1.", 59.95)
+  val orderItem6 = OrderItem("6", "TypeXYZ.7", "An item of type XYZ.7.", 29.95)
+  val orderItem7 = OrderItem("7", "TypeXYZ.5", "An item of type XYZ.5.", 9.95)
+  val orderItemsOfTypeX = Map(orderItem4.itemType -> orderItem4, orderItem5.itemType -> orderItem5, orderItem6.itemType -> orderItem6, orderItem7.itemType -> orderItem7)
+  inventorySystemA ! OrderPlaced(Order("124", "TypeXYZ", orderItemsOfTypeX))
+  inventorySystemX ! OrderPlaced(Order("124", "TypeXYZ", orderItemsOfTypeX))
 }
 
 class InventorySystemA extends Actor {
