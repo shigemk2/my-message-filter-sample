@@ -40,6 +40,9 @@ object MessageFilterDriver extends CompletableApp(4) {
   val orderItemsOfTypeX = Map(orderItem4.itemType -> orderItem4, orderItem5.itemType -> orderItem5, orderItem6.itemType -> orderItem6, orderItem7.itemType -> orderItem7)
   inventorySystemA ! OrderPlaced(Order("124", "TypeXYZ", orderItemsOfTypeX))
   inventorySystemX ! OrderPlaced(Order("124", "TypeXYZ", orderItemsOfTypeX))
+
+  awaitCompletion
+  println("MessageFilter: is completed.")
 }
 
 class InventorySystemA extends Actor {
@@ -59,7 +62,7 @@ class InventorySystemX extends Actor {
       println(s"InventorySystemX: handling $order")
       MessageFilterDriver.completedStep()
     case _ =>
-      println(s"InventorySystemX: received unexpected message")
+      println("InventorySystemX: received unexpected message")
       MessageFilterDriver.completedStep()
   }
 }
